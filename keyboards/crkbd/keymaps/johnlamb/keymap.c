@@ -26,18 +26,36 @@ extern rgblight_config_t rgblight_config;
 
 extern uint8_t is_master;
 
-char *swedish_codes[][2] = {
+typedef union {
+  uint32_t raw;
+  struct {
+    bool on_win :1;
+  };
+} user_config_t;
+
+user_config_t user_config;
+
+void keyboard_post_init_user(void) {
+  user_config.raw = eeconfig_read_user();
+}
+char *swedish_codes[][4] = {
   {
-    SS_RALT("a"), // Option+a -> å
-    SS_RALT("A"), // Option+A -> Å
+    SS_RALT("a"), // Option+a -> å Mac
+    SS_RALT("A"), // Option+A -> Å Mac
+    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_9)), // å Win
+    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_7)), // Å Win
   },
   {
-    SS_RALT("u")"a", // Option+u -> ä
-    SS_RALT("u")"A", // Option+U -> Ä
+    SS_RALT("u")"a", // Option+u -> ä Mac
+    SS_RALT("u")"A", // Option+U -> Ä Mac
+    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_8)), // ä Win
+    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_6)), // Ä Win
   },
   {
-    SS_RALT("u")"o", // Option+o -> ö
-    SS_RALT("u")"O", // Option+O -> Ö
+    SS_RALT("u")"o", // Option+o -> ö Mac
+    SS_RALT("u")"O", // Option+O -> Ö Mac
+    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_6)), // ö Win
+    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_1) SS_TAP(X_KP_4)), // Ö Win
   }
 };
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
@@ -45,10 +63,11 @@ char *swedish_codes[][2] = {
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 #define _QWERTY 0
-#define _LOWER 1
-#define _RAISE 2
-#define _ADJUST 3
-#define _MOUSE 4
+#define _LOWER 2
+#define _RAISE 3
+#define _ADJUST 4
+#define _MOUSE 5
+
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -59,7 +78,8 @@ enum custom_keycodes {
   RGBRST, 
   SE_AA,
   SE_AE,
-  SE_OE
+  SE_OE,
+  ON_WIN
 };
 
 #define MOUSE MO(_MOUSE)
@@ -85,11 +105,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, _______, _______, _______, _______, KC_VOLU,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT,   SE_AA,   SE_AE,\
+      KC_LCTL, KC_TAB, _______, _______, KC_MUTE, KC_VOLU,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT,   SE_OE,   SE_AE,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, _______, _______, _______, _______, KC_VOLD,                      _______, _______, _______, _______, _______,   SE_OE,\
+      KC_LSFT, _______, _______, _______, KC_LALT, KC_VOLD,                      _______, _______, _______, _______, _______,   SE_AA,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   LOWER,  KC_SPC,     LT(MOUSE, KC_ENT),   RAISE, LCAG_T(KC_NO) \
+                                          KC_LGUI,   LOWER,  KC_LALT,     LT(MOUSE, KC_ENT),   RAISE, LCAG_T(KC_NO) \
                                       //`--------------------------'  `--------------------------'
     ),
 
@@ -99,21 +119,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL, _______, _______, _______, _______, _______,                      KC_MINS,  KC_EQL, KC_LCBR, KC_RCBR, KC_PIPE,  KC_GRV,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LSFT, _______, _______, _______, _______, _______,                      KC_UNDS, KC_PLUS, KC_LBRC, KC_RBRC, KC_BSLS, KC_TILD,\
+      KC_LSFT, _______, _______, _______, KC_LALT, _______,                      KC_UNDS, KC_PLUS, KC_LBRC, KC_RBRC, KC_BSLS, KC_TILD,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   LOWER,  KC_SPC,     LT(MOUSE, KC_ENT),   RAISE, LCAG_T(KC_NO) \
+                                          KC_LGUI,   LOWER,  KC_LALT,     LT(MOUSE, KC_ENT),   RAISE, LCAG_T(KC_NO) \
                                       //`--------------------------'  `--------------------------'
   ),
 
   [_ADJUST] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        RESET, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,\
+        RESET, _______, ON_WIN, _______, KC_F4, _______,                      _______, _______, _______, _______, _______, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, _______, _______,                      _______, _______, _______, _______, _______, _______,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, _______, _______,                      _______, _______, _______, _______, _______, _______,\
+      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, KC_LALT, _______,                      _______, _______, _______, _______, _______, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                          KC_LGUI,   LOWER,  KC_SPC,     LT(MOUSE, KC_ENT),   RAISE, LCAG_T(KC_NO) \
+                                          KC_LGUI,   LOWER,  KC_LALT,     LT(MOUSE, KC_ENT),   RAISE, LCAG_T(KC_NO) \
                                       //`--------------------------'  `--------------------------'
   ),
 
@@ -267,16 +287,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case SE_AA: case SE_AE: case SE_OE: {
            uint8_t mods = get_mods();
            clear_mods();
-
            // Send code based on which key was pressed and whether Shift was held
            uint16_t index = keycode - SE_AA;
            uint8_t shift = mods & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT));
-           send_string(swedish_codes[index][(bool)shift]);
+           send_string(swedish_codes[index][(bool)shift+2*user_config.on_win]);
            set_mods(mods);
-           return false;
-           }
+           return false;}
+  case ON_WIN:{
+                user_config.on_win ^= 1; // Toggle on_win
+                eeconfig_update_user(user_config.raw);
+                return false;
+              }
+  //  case SE_TA:{
+  //           uint8_t mods = get_mods();
+  //           clear_mods();
+
+  //           // Send code based on which key was pressed and whether Shift was held
+  //           // uint16_t index = keycode - SE_AA;
+  //           // uint8_t shift = mods & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT));
+  //           // send_string(SS_LALT("134"));
+  //           SEND_STRING(SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_9)));
+  //           set_mods(mods);
+  //           return false;}
     default:
-                                      return true;
+    return true;
  }
   return true;
 }
