@@ -42,20 +42,26 @@ char *swedish_codes[][4] = {
   {
     SS_RALT("a"), // Option+a -> å Mac
     SS_RALT("A"), // Option+A -> Å Mac
-    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_9)), // å Win
-    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_7)), // Å Win
+    SS_RALT("w"), // RAlt+w -> å Win
+    SS_RALT("W"), // RAlt+w -> Å Win
+    // SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_9)), // å Win
+    // SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_7)), // Å Win
   },
   {
-    SS_RALT("u")"a", // Option+u -> ä Mac
-    SS_RALT("u")"A", // Option+U -> Ä Mac
-    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_8)), // ä Win
-    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_6)), // Ä Win
+    SS_RALT("u")"a", // Option+u+a -> ä Mac
+    SS_RALT("u")"A", // Option+U+A -> Ä Mac
+    SS_RALT("q"), // RAlt+q -> ä Win
+    SS_RALT("Q"), // RAlt+Q -> Ä Win
+    // SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_2) SS_TAP(X_KP_8)), // ä Win
+    // SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_1) SS_TAP(X_KP_9) SS_TAP(X_KP_6)), // Ä Win
   },
   {
-    SS_RALT("u")"o", // Option+o -> ö Mac
-    SS_RALT("u")"O", // Option+O -> Ö Mac
-    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_6)), // ö Win
-    SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_1) SS_TAP(X_KP_4)), // Ö Win
+    SS_RALT("u")"o", // Option+u+o -> ö Mac
+    SS_RALT("u")"O", // Option+U+O -> Ö Mac
+    SS_RALT("p"), // RAlt+p -> ö Win
+    SS_RALT("P"), // RAlt+P -> Ö Win
+    // SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_4) SS_TAP(X_KP_6)), // ö Win
+    // SS_LALT(SS_TAP(X_KP_0) SS_TAP(X_KP_2) SS_TAP(X_KP_1) SS_TAP(X_KP_4)), // Ö Win
   }
 };
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
@@ -136,9 +142,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_ADJUST] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-        RESET, _______, ON_WIN, _______,    KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, _______,\
+        RESET, _______, ON_WIN, _______,    KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, KC_DEL,\
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL, RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, _______,                        KC_F1,   KC_F2,   KC_F3, _______, _______, _______,\
+      KC_LCTL, RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, _______,                        KC_F1,   KC_F2,   KC_F3,  KC_F11,  KC_F12, _______,\
   //|--------+-------+--------+--------+--------+---------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, _______,                      _______, _______, _______, _______, _______, _______,\
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
